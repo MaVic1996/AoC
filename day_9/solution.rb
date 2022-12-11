@@ -8,52 +8,50 @@ POSITION_MAP ={
 
 def solve_1(file_path)
   commands = File.read(file_path).split("\n").map(&:split).map{|dir, steps| [dir, steps.to_i]}
-  build_path(commands)
+  build_path(commands, 1)
 end
 
-def build_path(commands)
+def solve_2(file_path)
+  commands = File.read(file_path).split("\n").map(&:split).map{|dir, steps| [dir, steps.to_i]}
+  build_path(commands, 9)
+end
+
+def build_path(commands, knots)
   visited_path = []
-  h_position = POSITION_MAP[commands[0][0].to_sym]
-  t_position = [0, 0]
-  commands[0] = [commands[0][0], commands[0][1]-1]
-  visited_path << t_position
+  h_position = [0, 0]
+  knots_position = knots.times.map{|t| [0,0]}
   commands.each do |command|
     direction = command[0]
     steps = command[1].to_i
     steps.times do
       x, y = POSITION_MAP[direction.to_sym]
       h_position = [h_position[0]+x, h_position[1]+y]
-      t_position = calculate_t_pos(t_position, h_position, visited_path)
+      knots_position = calculate_knots_position(knots_position, h_position)
+      visited_path << knots_position[-1] unless visited_path.include? knots_position[-1]
     end
   end
   visited_path
 end
 
-def calculate_t_pos(t_pos, h_pos, visited)
-  tx, ty = t_pos
-  hx, hy = h_pos
-  new_pos = []
-  if ty==hy
-    new_pos = [(tx+hx)/2, ty]
-  elsif tx==hx
-    new_pos = [tx, (ty+hy)/2]
-  else
-    if (hx - tx).abs == 1 && (hy - ty).abs == 1
-      new_pos = [tx, ty]
-    else
-      new_pos = calculate_movement(t_pos, h_pos)
-    end
+def calculate_knots_position(knots, h_position)
+  knots[0] = calculate_t_pos(knots[0], h_position)
+  return knots if knots.length == 1
+  for i in 1..knots.length-1
+    knots[i] = calculate_t_pos(knots[i], knots[i-1])
   end
-  visited << new_pos unless visited.include?(new_pos)
-  new_pos
+  knots
 end
 
-def calculate_movement(t_pos, h_pos)
-  tx, ty = t_pos
-  hx, hy = h_pos
-  if (hx - tx).abs > (hy - ty).abs
-    return [(hx-tx)/2, hy]
-  else
-    return [hx, (hy-ty)/2]
+
+def calculate_t_pos(t_pos, h_pos)
+  x_dist = (t_pos[0] - h_pos[0]).abs
+  y_dist = (t_pos[1] - h_pos[1]).abs
+  x, y = h_pos
+  if x_dist.abs <= 1 && y_dist.abs <= 1
+    return t_pos
   end
+  x = (h_pos[0] + t_pos[0])/2 if x_dist.abs == 2
+  y = (h_pos[1] + t_pos[1])/2 if y_dist.abs == 2 
+
+  return [x, y]
 end
