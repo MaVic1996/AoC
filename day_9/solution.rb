@@ -8,33 +8,31 @@ POSITION_MAP ={
 
 def solve_1(file_path)
   commands = File.read(file_path).split("\n").map(&:split).map{|dir, steps| [dir, steps.to_i]}
-  build_path(commands, 1)
+  build_path(commands, 2)
 end
 
 def solve_2(file_path)
   commands = File.read(file_path).split("\n").map(&:split).map{|dir, steps| [dir, steps.to_i]}
-  build_path(commands, 9)
+  build_path(commands, 10)
 end
 
 def build_path(commands, knots)
   visited_path = []
-  h_position = [0, 0]
   knots_position = knots.times.map{|t| [0,0]}
   commands.each do |command|
     direction = command[0]
     steps = command[1].to_i
     steps.times do
       x, y = POSITION_MAP[direction.to_sym]
-      h_position = [h_position[0]+x, h_position[1]+y]
-      knots_position = calculate_knots_position(knots_position, h_position)
+      knots_position[0] = [knots_position[0][0]+x, knots_position[0][1]+y]
+      knots_position = calculate_knots_position(knots_position)
       visited_path << knots_position[-1] unless visited_path.include? knots_position[-1]
     end
   end
   visited_path
 end
 
-def calculate_knots_position(knots, h_position)
-  knots[0] = calculate_t_pos(knots[0], h_position)
+def calculate_knots_position(knots)
   return knots if knots.length == 1
   for i in 1..knots.length-1
     knots[i] = calculate_t_pos(knots[i], knots[i-1])
