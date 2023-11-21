@@ -1,2 +1,8 @@
-# AoC-2022
-Advent of Code of 2022
+# AoC
+Advent of Code
+
+## 2022
+  NOT GOOD ENOUGH
+
+## 2023
+  LET THE GAMES BEGIN
