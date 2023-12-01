@@ -1,15 +1,23 @@
-def solve_1(file_path = './input.txt')
-  File.read(file_path).split("\n").map do |line|
-    numbers = line.split('').select { |elem| elem.match(/[[:digit:]]/) }
+def solve_first(input)
+  input.map do |line|
+    numbers = line.scan(/\d/)
     (numbers[0] + numbers[-1]).to_i
   end.sum
 end
 
-def solve_2(file_path = './input.txt')
-  numbers = %w[zero one two three four five six seven eight nine]
-  file = File.read(file_path)
-  lines = file.split("\n").map do |line|
-    line.to_s.gsub(/(?=(#{numbers.join('|')}))/){"#{numbers.index(Regexp.last_match(1))}"}
-  end
-  lines.map { |line| line.scan(/\d/) }.sum { (_1.first + _1.last).to_i }
+def solve_second(input)
+  num_array = %w[zero one two three four five six seven eight nine]
+  input.map do |line|
+    numbers = line.gsub(/(?=(#{num_array.join('|')}))/){ num_array.index(Regexp.last_match(1)).to_s }.scan(/\d/)
+    (numbers[0] + numbers[-1]).to_i
+  end.sum
 end
+
+def solve_both(file_path = './input.txt')
+  file = File.read(file_path).split("\n")
+
+  puts "Part 1: #{solve_first(file)}"
+  puts "Part 2: #{solve_second(file)}"
+end
+
+solve_both *ARGV
