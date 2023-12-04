@@ -1,5 +1,6 @@
+
 def solve_first(input)
-  get_adjacents(input).select{ |n, cols, row| check_num_first(input, cols, row)}.map{ |valid| valid[0].to_i}.sum
+  get_adjacents(input).reduce(0){ |acc, elem| acc+=calculate_input(input, *elem)}
 end
 
 def solve_second(input)
@@ -7,7 +8,7 @@ def solve_second(input)
 end
 
 
-def check_num_first(input, cols, row)
+def calculate_input(input, val, cols, row)
   matrix = input.map{|line| line.split('')}
   col_ini, col_end = cols[0]-1, cols[-1]
   # Fix cols
@@ -22,11 +23,11 @@ def check_num_first(input, cols, row)
     (col_ini..col_end).each do |j|
       next if i == row && (cols[0]...cols[-1]).include?(j)
       if matrix[i][j] != '.'
-        return true 
+        return val.to_i 
       end
     end
   end
-  false
+  0
 end
 
 def get_valids(input, pre_valids)
