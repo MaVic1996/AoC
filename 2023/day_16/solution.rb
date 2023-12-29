@@ -7,7 +7,7 @@ DIRECTIONS= {
 
 def solve_first(input)
   board = input.map{ |line| line.split('') }
-  direction = DIRECTIONS[:right]
+  direction = initial_direction(board)
   curr_point = [0, 0]
   get_path(board, direction, curr_point, Set.new)
 end
@@ -17,24 +17,33 @@ def solve_second(input)
 end
 
 def get_path(board, direction, origin, visited)
-
   paths = [[origin, direction]]
-  while paths.length > 0 
+  path_set = Set.new
+  path_set.add([[origin, direction]])
+
+  while paths.length > 0
     origin, direction = paths.shift
+    next if path_set.include?([origin, direction])
+    path_set.add([origin, direction])
     row, col = origin
     while valid_cell(board, row, col)
-      sleep(1)
       visited.add([row, col]) unless exists?(visited, row, col)
-      row+=direction[0]
-      col+=direction[1]
+      row += direction[0]
+      col += direction[1]
       if valid_cell(board, row, col) && board[row][col] != '.'
-        paths+= new_dirs(board, row, col, direction)
+        paths += new_dirs(board, row, col, direction)
         break
       end
-      represent_visited(board, visited)
+      # represent_visited(board, visited)
     end
   end
   visited.size
+end
+
+def initial_direction(board)
+  return DIRECTIONS[:right] if ['-', '.', '/'].include?(board[0][0])
+
+  DIRECTIONS[:down]
 end
 
 def represent_visited(board, visited)
