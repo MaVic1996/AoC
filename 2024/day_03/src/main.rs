@@ -34,7 +34,7 @@ fn part1(input: &str) -> i32 {
 
 fn part2(input: &str) -> i32 {
   let mul_regex = Regex::new(r"do\(\).*?mul\((\d{1,3}),\d{1,3}\).*?don\'t\(\)").unwrap();
-  let do_blocks: i32 = mul_regex.find_iter(format!("do(){}don't()", input).as_str()).map(|x| {
+  let do_blocks: i32 = mul_regex.find_iter(format!("do(){}don't()", input.replace("\n", "").replace("\r", "")).as_str()).map(|x| {
     return part1(x.as_str());
   }).sum();
 
