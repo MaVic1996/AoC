@@ -1,9 +1,9 @@
 use std::fs;
 
 fn main() {
-  let file_name = "input.txt";
+  let file_name = "day_01/mini.txt";
   let input = read_file(&file_name);
-  // print
+
   let sol1 = part1(&input);
   println!("Solution for part 1: {}", sol1);
 

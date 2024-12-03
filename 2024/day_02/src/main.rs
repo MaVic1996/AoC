@@ -2,7 +2,7 @@ use std::fs;
 use std::convert::TryInto;
 
 fn main() {
-  let file_name = "input.txt";
+  let file_name = "day_02/input.txt";
   let input = read_file(&file_name);
   
   let sol1 = part1(&input);
