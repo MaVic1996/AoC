@@ -62,9 +62,8 @@ fn check_result(result: i64, numbers: &[i64]) -> bool {
   let last = numbers[numbers.len()-1];
   let rest = &numbers[..numbers.len()-1];
 
-  // Recurre para comprobar si alguna combinación de + o * con el resto da el objetivo.
-  let rest_combinations = check_result(result - last, rest) // Suma
-      || (result % last == 0 && check_result(result / last, rest));  // Multiplicación
+  let rest_combinations = check_result(result - last, rest)
+      || (result % last == 0 && check_result(result / last, rest));
 
   return rest_combinations;
 }
@@ -72,10 +71,6 @@ fn check_result(result: i64, numbers: &[i64]) -> bool {
 
 fn check_results_concatenate(result: i64, numbers: &[i64]) -> bool {
   if numbers.len() == 2 {
-    // println!("Only 2 numbers");
-    // println!("Numbers: {} {} - Result: {}", numbers[0], numbers[1], result);
-    // println!("Multiplication: {} - Sum: {} - Concatenate: {}", numbers[0] * numbers[1], numbers[0] + numbers[1], format!("{}{}", numbers[0], numbers[1]).parse::<i64>().expect("Error al convertir a entero"));
-    // println!("\tResult: {:}", result);
     return numbers[0] * numbers[1] == result || numbers[0] + numbers[1] == result || format!("{}{}",numbers[0], numbers[1]).parse::<i64>().expect("Error al convertir a entero") == result;
   }
 
@@ -83,12 +78,8 @@ fn check_results_concatenate(result: i64, numbers: &[i64]) -> bool {
   let second = numbers[1];
   let rest = &numbers[2..];
 
-  // println!("Numbers: {} {} {:?} - Result: {}", first, second, rest, result);
-  // println!("Multiplication: {} - Sum: {} - Concatenate: {}", first * second, first + second, format!("{}{}", first, second).parse::<i64>().expect("Error al convertir a entero"));
-  // println!("\tRest: {:?}", rest);
-  // Recurre para comprobar si alguna combinación de + o * con el resto da el objetivo.
-  let rest_combinations = check_results_concatenate(result, &prepend_list(rest, first + second)) // Suma
-      || check_results_concatenate(result, &prepend_list(rest, first * second))  // Multiplicación;
+  let rest_combinations = check_results_concatenate(result, &prepend_list(rest, first + second))
+      || check_results_concatenate(result, &prepend_list(rest, first * second))
       || check_results_concatenate(result, &prepend_list(rest, format!("{}{}", first, second).parse::<i64>().expect("Error al convertir a entero")));
 
   return rest_combinations;
